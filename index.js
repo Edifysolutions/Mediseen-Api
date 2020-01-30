@@ -10,11 +10,13 @@ let jsonencoded = bodyParser.json();
 
 let server = http.createServer(app);
 
+// GET /drugs
 app.get('/', (req, res)=>{
 	console.log('Working');
 	res.send('Working');
 });
 
+// GET /drugs
 app.get('/drugs', (req, res)=>{
 	db.drug.findAll()
 		.then(function(drugs){
@@ -38,6 +40,7 @@ app.post('/add', urlencoded, (req, res)=>{
 		});
 });
 
+// PUT /update/:id
 app.put('/update/:id', urlencoded, (req, res)=>{
 	db.drug.findOne({where: {id: req.params.id}})
 		.then(function(drugFound){
