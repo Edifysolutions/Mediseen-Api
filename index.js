@@ -56,6 +56,21 @@ app.put('/update/:id', urlencoded, (req, res)=>{
 		});
 });
 
+app.delete('/pluck/:id', urlencoded, (req, res)=>{
+	db.drug.findOne({where: {id: req.params.id}})
+		.then(function(drugFound){
+			// check if drug has been found
+			return drugFound.destroy(req.body);
+		}, function(){
+			res.status(404).send();
+		})
+		.then(function(drugUpdate){
+			res.json(drugUpdate);
+		}, function(){
+			res.status(500).send();
+		});
+});
+
 // syncing server with database
 db.sequelizeInst.sync({force : false})
 	.then(function(){
