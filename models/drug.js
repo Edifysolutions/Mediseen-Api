@@ -5,22 +5,44 @@ module.exports = function(sequelize, DataType){
 			allowNull: false,
 			unique: true,
 			validate: {
-				len: [1, 250]
+				len: [3, 250]
 			}
 		},
-		perscription: {
+		manufacturer: {
 			type: DataType.STRING,
 			allowNull: false,
 			validate: {
-				len: [1, 250]
+				len: [3, 250]
 			}
 		},
-		dosage: {
+		composition: {
+			type: DataType.TEXT,
+			allowNull: false/*,
+			validate: {
+				len: [1, 250]
+			}*/
+		},
+		dosage_form: {
+			type: DataType.ENUM,
+			allowNull: false,
+			values: ['capsule', 'tablet', 'syrup', 'injection']
+		},
+		dosage_administration: {
 			type: DataType.STRING,
 			allowNull: false,
 			validate: {
-				len: [1, 250]
+				len: [7, 250]
 			}
+		},
+		storage_handling: {
+			type: DataType.STRING,
+			allowNull: true,
+			defaultValue: null
+		},
+		nafdac_reg: {
+			type: DataType.STRING,
+			allowNull: false,
+			len: [3, 20]
 		}
 	});
 }

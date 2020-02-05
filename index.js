@@ -3,12 +3,14 @@ let http = require('http');
 let express = require('express');
 let app = express();
 let bodyParser = require('body-parser');
+const _ = require('underscore');
 let db = require('./db');
 let PORT = process.env.PORT || 4000;
-let urlencoded = bodyParser.urlencoded({extended: false});
-let jsonencoded = bodyParser.json();
 
 let server = http.createServer(app);
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json());
 
 // GET /drugs
 app.get('/', (req, res)=>{
@@ -16,67 +18,95 @@ app.get('/', (req, res)=>{
 	res.send('Working');
 });
 
+// GET /drug/id?
+app.get('/drug/:id', (req, res)=>{
+	db.drug.findByPk(req.params.id).then(function(drug){
+		if (drug) {
+			res.json(drug);
+		}else{
+			res.status(404).send();
+		}
+	}, function(e){
+		res.status(500).send();
+	});
+});
+
 // GET /drugs
 app.get('/drugs', (req, res)=>{
-	db.drug.findAll()
-		.then(function(drugs){
-			// check if the drugs are found
-			console.log(drugs);
-			res.json(drugs);
-		}, function (e) {
-			res.send(e);
-		});
+	let where = {};
+	if (req.query.drug_name) {
+		where.drug_name = {
+			$like: `%${req.query.drug_name}%`
+		};
+	}
+	if (req.query.catagory) {
+		where.dosage_form = {
+			$like: `%${req.query.catagory}%`
+		};
+	}
+	db.drug.findAll(where).then(function(drug){
+		if (drug) {
+			res.json(drug);
+		}else{
+			res.status(404).send();
+		}
+	}, function(e){
+		res.status(500).send();
+	});
 });
 
 // POST /add
-app.post('/add', urlencoded, (req, res)=>{
-	let body = req.body
-	db.drug.create(body)
-		.then(function(drug){
-			res.json(drug);
-			console.log(drug.toJSON());
-		}, function(e){
-			res.send(e);
-		});
+app.post('/add', (req, res)=>{
+	let body = req.body;
+	db.drug.create(body).then(function(drug){
+		res.json(drug);
+		console.log(drug.toJSON());
+	}, function(e){
+		res.status(400).send(e);
+	});
 });
 
 // PUT /update/:id
-app.put('/update/:id', urlencoded, (req, res)=>{
-	db.drug.findOne({where: {id: req.params.id}})
-		.then(function(drugFound){
-			// check if drug has been found
-			return drugFound.update(req.body);
-		}, function(){
+app.put('/update/:id', (req, res)=>{
+	db.drug.findByPk(req.params.id).then(function(drugFound){
+		// check if drug has been found
+		if (drugFound){
+			drugFound.update(req.body).then(function(drugUpdate){
+				res.json(drugUpdate);
+			}, function(){
+				res.status(500).send();
+			});
+		}else{
 			res.status(404).send();
-		})
-		.then(function(drugUpdate){
-			res.json(drugUpdate);
-		}, function(){
-			res.status(500).send();
-		});
+		}
+	}, function(){
+		res.status(400).send();
+	});
 });
 
-app.delete('/pluck/:id', urlencoded, (req, res)=>{
-	db.drug.findOne({where: {id: req.params.id}})
-		.then(function(drugFound){
-			// check if drug has been found
-			return drugFound.destroy(req.body);
-		}, function(){
+app.delete('/pluck/:id', (req, res)=>{
+	db.drug.findByPk(req.params.id).then(function(drugFound){
+		// check if drug has been found
+		if (drugFound){
+			drugFound.destroy(req.body).then(function(drugUpdate){
+				res.json(drugUpdate);
+			}, function(){
+				res.status(500).send();
+			});
+		}else{
 			res.status(404).send();
-		})
-		.then(function(drugUpdate){
-			res.json(drugUpdate);
-		}, function(){
-			res.status(500).send();
-		});
+		}
+	}, function(){
+		res.status(404).send();
+	});
 });
 
 // syncing server with database
-db.sequelizeInst.sync({force : false})
-	.then(function(){
-		server.listen(PORT, ()=>{
-			console.log(`server is running on port ${PORT}`);
-		});
-	}, function(e){
-		console.error(e);
+db.sequelizeInst.sync({force : true}).then(function(){
+	server.listen(PORT, ()=>{
+		console.log(`server is running on port ${PORT}`);
+		console.log(`database return status ${process.env.REFRESH_DB}`, typeof process.env.REFRESH_DB)
 	});
+}, function(e){
+	console.error(e);
+});
