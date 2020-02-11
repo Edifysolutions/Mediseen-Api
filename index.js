@@ -39,11 +39,12 @@ app.get('/drugs', (req, res)=>{
 			$like: `%${req.query.drug_name}%`
 		};
 	}
-	if (req.query.catagory) {
+	if (req.query.category) {
 		where.dosage_form = {
-			$like: `%${req.query.catagory}%`
+			$like: `%${req.query.category}%`
 		};
 	}
+	console.log(where, req.query)
 	db.drug.findAll(where).then(function(drug){
 		if (drug) {
 			res.json(drug);
@@ -59,8 +60,21 @@ app.get('/drugs', (req, res)=>{
 app.post('/add', (req, res)=>{
 	let body = req.body;
 	db.drug.create(body).then(function(drug){
-		res.json(drug);
-		console.log(drug.toJSON());
+		db.category.create(drug.dataValues).then(function(catgo){
+			res.json(drug);
+		}, function(e){
+			res.status(400).send(e);
+		})
+	}, function(e){
+		res.status(400).send(e);
+	});
+});
+
+app.post('/sign-up', (req, res)=>{
+	let body = req.body;
+	console.log(body)
+	db.user.create(body).then(function(user){
+		res.json(user.toPublic());
 	}, function(e){
 		res.status(400).send(e);
 	});

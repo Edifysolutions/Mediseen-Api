@@ -16,6 +16,11 @@ let db = {};
 db.Sequelize = Sequelize;
 db.sequelizeInst = sequelizeInst;
 db.drug = sequelizeInst.import(__dirname+'/models/drug.js');
+db.user = sequelizeInst.import(__dirname+'/models/user.js');
+db.category = sequelizeInst.import(__dirname+'/models/category.js');
+
+db.category.belongsTo(db.drug);
+db.drug.hasMany(db.category);
 
 module.exports = db;
 

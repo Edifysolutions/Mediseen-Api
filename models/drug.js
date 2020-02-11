@@ -12,15 +12,16 @@ module.exports = function(sequelize, DataType){
 			type: DataType.STRING,
 			allowNull: false,
 			validate: {
-				len: [3, 250]
+				len: [3, 60]
 			}
+		},
+		side_effect: {
+			type: DataType.TEXT,
+			allowNull: true
 		},
 		composition: {
 			type: DataType.TEXT,
-			allowNull: false/*,
-			validate: {
-				len: [1, 250]
-			}*/
+			allowNull: false
 		},
 		dosage_form: {
 			type: DataType.ENUM,
@@ -35,14 +36,23 @@ module.exports = function(sequelize, DataType){
 			}
 		},
 		storage_handling: {
-			type: DataType.STRING,
+			type: DataType.TEXT,
 			allowNull: true,
 			defaultValue: null
 		},
 		nafdac_reg: {
 			type: DataType.STRING,
 			allowNull: false,
-			len: [3, 20]
+			len: [3, 30]
+		}
+	},
+	{
+		hooks: {
+			beforeValidate: function(drug, option){
+				if(drug.drug_name && typeof drug.drug_name == "string"){
+					drug.drug_name = drug.drug_name.toLowerCase().trim();
+				}
+			}
 		}
 	});
 }
