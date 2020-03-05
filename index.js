@@ -110,7 +110,7 @@ app.delete('/pluck/:id', (req, res)=>{
 });
 
 // syncing server with database
-db.sequelizeInst.sync(/*{force : true}*/).then(function(){
+db.sequelizeInst.sync({force : true}).then(function(){
 	server.listen(PORT, ()=>{
 		console.log(`server is running on port ${PORT}`);
 		console.log(`database return status ${process.env.REFRESH_DB}`, typeof process.env.REFRESH_DB)
