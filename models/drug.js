@@ -8,6 +8,13 @@ module.exports = function(sequelize, DataType){
 				len: [3, 250]
 			}
 		},
+		therapeuthic_class: {
+			type: DataType.STRING,
+			allowNull: false,
+			validate: {
+				len: [3, 60]
+			}
+		},
 		manufacturer: {
 			type: DataType.STRING,
 			allowNull: false,
@@ -15,9 +22,9 @@ module.exports = function(sequelize, DataType){
 				len: [3, 60]
 			}
 		},
-		side_effect: {
+		adverse_effect: {
 			type: DataType.TEXT,
-			allowNull: true
+			allowNull: false
 		},
 		composition: {
 			type: DataType.TEXT,
@@ -37,13 +44,27 @@ module.exports = function(sequelize, DataType){
 		},
 		storage_handling: {
 			type: DataType.TEXT,
-			allowNull: true,
-			defaultValue: null
+			allowNull: false,
+			defaultValue: "Store in cool dry place"
 		},
 		nafdac_reg: {
 			type: DataType.STRING,
 			allowNull: false,
 			len: [3, 30]
+		},
+		precaution: {
+			type: DataType.STRING,
+			allowNull: false,
+			validate: {
+				len: [3, 250]
+			}
+		},
+		pharmacology: {
+			type: DataType.STRING,
+			allowNull: false,
+			validate: {
+				len: [3, 250]
+			}
 		}
 	},
 	{
