@@ -55,9 +55,9 @@ module.exports = function(sequelize, DataType){
 	});
 
 	// instance methods
-	_user.prototype.toPublic = function() {
+	_user.prototype.toPublicJOSN = function() {
 		let values = this.toJSON();
-		return _.pick(values, "email", "username", "updatedAt", "createdAt", "id");
+		return _.omit(values, "salt", "hash", "updatedAt", "createdAt", "password");
 	};
 	return _user;
 }

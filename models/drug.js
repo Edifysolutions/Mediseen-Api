@@ -1,5 +1,6 @@
+let _ = require('underscore');
 module.exports = function(sequelize, DataType){
-	return sequelize.define('drug', {
+	let _drug = sequelize.define('drug', {
 		drug_name: {
 			type: DataType.STRING,
 			allowNull: false,
@@ -65,6 +66,13 @@ module.exports = function(sequelize, DataType){
 			validate: {
 				len: [3, 250]
 			}
+		},
+		interaction: {
+			type: DataType.STRING,
+			allowNull: false,
+			validate: {
+				len: [3, 250]
+			}
 		}
 	},
 	{
@@ -76,4 +84,11 @@ module.exports = function(sequelize, DataType){
 			}
 		}
 	});
+
+	_drug.prototype.toPublicJOSN = function() {
+		let values = this.toJSON();
+		return _.omit(values, "createdAt", "updatedAt");
+	};
+
+	return _drug;
 }

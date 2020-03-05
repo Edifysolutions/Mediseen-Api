@@ -58,7 +58,7 @@ app.get('/drugs', (req, res)=>{
 app.post('/add', (req, res)=>{
 	let body = req.body;
 	db.drug.create(body).then(function(drug){
-		res.json(drug);
+		res.json(drug.toPublicJOSN());
 	}, function(e){
 		res.status(400).send(e);
 	});
@@ -68,7 +68,7 @@ app.post('/sign-up', (req, res)=>{
 	let body = req.body;
 	body.forEach(detail=>detail = detail.trim());
 	db.user.create(body).then(function(user){
-		res.json(user.toPublic());
+		res.json(user.toPublicJOSN());
 	}, function(e){
 		res.status(400).send(e);
 	});
@@ -80,7 +80,7 @@ app.put('/update/:id', (req, res)=>{
 		// check if drug has been found
 		if (drugFound){
 			drugFound.update(req.body).then(function(drugUpdate){
-				res.json(drugUpdate);
+				res.json(drugUpdate.toPublicJOSN());
 			}, function(){
 				res.status(500).send();
 			});
