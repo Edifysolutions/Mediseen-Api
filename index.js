@@ -21,7 +21,7 @@ app.get('/', (req, res)=>{
 app.get('/drug/:id', (req, res)=>{
 	db.drug.findByPk(req.params.id).then(function(drug){
 		if (drug) {
-			res.json(drug);
+			res.json(drug.toPublicJOSN());
 		}else{
 			res.status(404).send();
 		}
@@ -45,7 +45,7 @@ app.get('/drugs', (req, res)=>{
 	}
 	db.drug.findAll(where).then(function(drug){
 		if (drug) {
-			res.json(drug);
+			res.json(drug.toPublicJOSN());
 		}else{
 			res.status(404).send();
 		}
@@ -110,7 +110,7 @@ app.delete('/pluck/:id', (req, res)=>{
 });
 
 // syncing server with database
-db.sequelizeInst.sync({force : true}).then(function(){
+db.sequelizeInst.sync(/*{force : true}*/).then(function(){
 	server.listen(PORT, ()=>{
 		console.log(`server is running on port ${PORT}`);
 		console.log(`database return status ${process.env.REFRESH_DB}`, typeof process.env.REFRESH_DB)
