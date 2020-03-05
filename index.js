@@ -14,7 +14,6 @@ app.use(bodyParser.json());
 
 // GET /drugs
 app.get('/', (req, res)=>{
-	console.log('Working');
 	res.send('Working');
 });
 
@@ -44,7 +43,6 @@ app.get('/drugs', (req, res)=>{
 			$like: `%${req.query.category}%`
 		};
 	}
-	console.log(where, req.query)
 	db.drug.findAll(where).then(function(drug){
 		if (drug) {
 			res.json(drug);
@@ -60,11 +58,7 @@ app.get('/drugs', (req, res)=>{
 app.post('/add', (req, res)=>{
 	let body = req.body;
 	db.drug.create(body).then(function(drug){
-		db.category.create(drug.dataValues).then(function(catgo){
-			res.json(drug);
-		}, function(e){
-			res.status(400).send(e);
-		})
+		res.json(drug);
 	}, function(e){
 		res.status(400).send(e);
 	});
@@ -72,7 +66,7 @@ app.post('/add', (req, res)=>{
 
 app.post('/sign-up', (req, res)=>{
 	let body = req.body;
-	console.log(body)
+	body.forEach(detail=>detail = detail.trim());
 	db.user.create(body).then(function(user){
 		res.json(user.toPublic());
 	}, function(e){
@@ -116,7 +110,7 @@ app.delete('/pluck/:id', (req, res)=>{
 });
 
 // syncing server with database
-db.sequelizeInst.sync({force : true}).then(function(){
+db.sequelizeInst.sync(/*{force : true}*/).then(function(){
 	server.listen(PORT, ()=>{
 		console.log(`server is running on port ${PORT}`);
 		console.log(`database return status ${process.env.REFRESH_DB}`, typeof process.env.REFRESH_DB)
