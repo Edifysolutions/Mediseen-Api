@@ -21,7 +21,7 @@ app.get('/', (req, res)=>{
 app.get('/drug/:id', (req, res)=>{
 	db.drug.findByPk(req.params.id).then(function(drug){
 		if (drug) {
-			res.json(drug.toPublicJOSN());
+			res.json(drug);
 		}else{
 			res.status(404).send();
 		}
@@ -45,7 +45,7 @@ app.get('/drugs', (req, res)=>{
 	}
 	db.drug.findAll(where).then(function(drug){
 		if (drug) {
-			res.json(drug.toPublicJOSN());
+			res.json(drug);
 		}else{
 			res.status(404).send();
 		}
@@ -80,7 +80,7 @@ app.put('/update/:id', (req, res)=>{
 		// check if drug has been found
 		if (drugFound){
 			drugFound.update(req.body).then(function(drugUpdate){
-				res.json(drugUpdate.toPublicJOSN());
+				res.json(drugUpdate);
 			}, function(){
 				res.status(500).send();
 			});
