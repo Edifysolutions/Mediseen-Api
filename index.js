@@ -10,7 +10,6 @@ const db = require('./db');
 const api = require('./routes/api');
 const user = require('./routes/user');
 const auth_and_check = require('./middlewares/auth_and_check')(db);
-const DROP_DB = false;
 
 app.use(express.urlencoded({extended: false}));
 app.use(express.json());
@@ -30,7 +29,7 @@ app.get('/', auth_and_check.requestAuthenticationToken, (req, res)=>{
 });
 
 // syncing server with database
-db.sequelizeInst.sync({force : DROP_DB}).then(function(){
+db.sequelizeInst.sync({force : true}).then(function(){
 	server.listen(PORT, ()=>{
 		console.log(`server is running on port ${PORT}`);
 		console.log(`database return status ${DROP_DB}`, typeof DROP_DB)
