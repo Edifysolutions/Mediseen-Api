@@ -17,11 +17,13 @@ if (process.env.NODE_ENV == "development") {
 	});
 }
 
-
 db.Sequelize = Sequelize;
 db.sequelizeInst = sequelizeInst;
 db.drug = sequelizeInst.import(__dirname+'/models/drug.js');
 db.user = sequelizeInst.import(__dirname+'/models/user.js');
+db.key = sequelizeInst.import(__dirname+'/models/key.js');
+
+db.user.hasMany(db.key);
+db.key.belongsTo(db.user);
 
 module.exports = db;
-
