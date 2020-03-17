@@ -18,7 +18,6 @@ route.post('/sign-up', (req, res)=>{
 });
 
 route.post('/sign-in', (req, res)=>{
-	console.log(req.body);
 	db.user.authenticate(req.body).then(function(user) {
 		res.header("Auth", user.generateToken('authentication')).json(user.toPublicJSON());
 	}, function(e) {
@@ -26,15 +25,4 @@ route.post('/sign-in', (req, res)=>{
 	});
 });
 
-// route.post('user', ()=>{
-
-// });
-
 module.exports = route;
-
-/*
-	1. Create user 		// POST /sign-up
-	2. Create API key (handler function)
-	3. Generate and Get API key		// POST /view-key
-	4. Login user			// POST /login
-*/

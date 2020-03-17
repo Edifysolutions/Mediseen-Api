@@ -51,9 +51,6 @@ function _user(sequelize, DataType){
 			type: DataType.STRING,
 			defaultValue: "",
 			allowNull: true
-			// validate: {
-				// len: [10, 100]
-			// }
 		}
 	},
 	{
@@ -101,7 +98,6 @@ function _user(sequelize, DataType){
 					email: body.email.toLowerCase().trim()
 				}
 			}).then(function(user) {
-				console.log(user.dataValues, "authentication log");
 				if (!user || !bcrypt.compareSync(body.password, user.get('hash'))) {
 					return reject();
 				}
@@ -118,7 +114,6 @@ function _user(sequelize, DataType){
 				let decodedData = jwt.verify(token, process.env.TOKEN_ENC_KEY);
 				let decryptedData = cryptojs.AES.decrypt(decodedData.token, process.env.ENC_KEY).toString(cryptojs.enc.Utf8);
 				let key = JSON.parse(decryptedData);
-				console.log('decrypted...', decodedData, decryptedData, key);
 
 				_user.findByPk(key.id).then(function(user){
 					if (!user) return reject();

@@ -25,7 +25,6 @@ function key(sequelize, DataType){
 		let exDate = new Date();
 		const codedKey = cryptojs.AES.encrypt(email, process.env.ENC_KEY).toString(); // create api-key with and ENC_KEY
 
-		console.log('flag is', userType);
 		if (user.userType == "dev") {
 			flag = `MDD-`;
 			exDate = new Date(new Date().setDate(120));
@@ -36,9 +35,6 @@ function key(sequelize, DataType){
 			flag = `MFF-`;
 			exDate = new Date(new Date().setDate(999999));
 		}
-
-		console.log(exDate, typeof exDate);
-		
 		return {
 			token: flag+codedKey,
 			expairy_date: exDate.toISOString()

@@ -3,9 +3,8 @@ let route = express.Router();
 let db = require('../db');
 let _ = require('underscore');
 const auth_and_check = require('../middlewares/auth_and_check')(db);
-// const checkKey = require('../middlewares/check-key');
 const freeKey = process.env.FREE_API_KEY;
-console.log({"FREE API KEY":freeKey});
+// const checkKey = require('../middlewares/check-key');
 
 // GET /drug/id
 route.get('/drug/:id', (req, res)=>{
@@ -19,24 +18,6 @@ route.get('/drug/:id', (req, res)=>{
 		res.status(500).send();
 	});
 });
-
-/*route.get('/create-key', auth_and_check.requestAuthenticationToken, (req, res)=>{
-	const apikey = db.key.generateApiKey(req.user.dataValues);
-
-	db.key.create({token: apikey}).then(function(key){
-		req.user.addKey(key).then(function(){
-			return key.reload();
-		}, function(){
-			res.status(500).send();
-		}).then(function(key){
-			res.json(key.toPublicJOSN());
-		},function(){
-			res.status(500).send();
-		});
-	}, function(e){
-		res.status(400).send(e);
-	});
-});*/
 
 // GET /drugs?drug_name=&category=&range=
 route.get('/drugs', /*checkKey,*/ (req, res)=>{
@@ -78,7 +59,7 @@ route.post('/add', (req, res)=>{
 
 route.post('/create-key', auth_and_check.requestAuthenticationToken, (req, res)=>{
 	const apikey = db.key.generateApiKey(req.user.dataValues);
-	console.log(apikey, 'apikey...');
+
 	db.key.create(apikey).then(function(key){
 		req.user.addKey(key).then(function(){
 			return key.reload();
