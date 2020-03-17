@@ -32,7 +32,6 @@ app.get('/', auth_and_check.requestAuthenticationToken, (req, res)=>{
 db.sequelizeInst.sync({force : false}).then(function(){
 	server.listen(PORT, ()=>{
 		console.log(`server is running on port ${PORT}`);
-		console.log(`database return status ${DROP_DB}`, typeof DROP_DB)
 	});
 }, function(e){
 	console.error(e);
