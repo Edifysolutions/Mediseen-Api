@@ -48,7 +48,7 @@ route.get('/drugs', /*checkKey,*/ (req, res)=>{
 });
 
 // POST /add
-route.post('/add', (req, res)=>{
+route.post('/add', auth_and_check.requestAuthenticationToken, (req, res)=>{
 	let body = req.body;
 	db.drug.create(body).then(function(drug){
 		res.json(drug.toPublicJOSN());
@@ -76,7 +76,7 @@ route.post('/create-key', auth_and_check.requestAuthenticationToken, (req, res)=
 });
 
 // PUT /update/:id
-route.put('/update/:id', (req, res)=>{
+route.put('/update/:id', auth_and_check.requestAuthenticationToken, (req, res)=>{
 	db.drug.findByPk(req.params.id).then(function(drugFound){
 		// check if drug has been found
 		if (drugFound){
@@ -93,7 +93,7 @@ route.put('/update/:id', (req, res)=>{
 	});
 });
 
-route.delete('/pluck/:id', (req, res)=>{
+route.delete('/pluck/:id', auth_and_check.requestAuthenticationToken, (req, res)=>{
 	db.drug.findByPk(req.params.id).then(function(drugFound){
 		// check if drug has been found
 		if (drugFound){

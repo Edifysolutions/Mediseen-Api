@@ -20,7 +20,7 @@ app.use('/api', api);
 app.use(user);
 
 // GET /drugs
-app.get('/', auth_and_check.requestAuthenticationToken, (req, res)=>{
+app.get('/', (req, res)=>{
 	res.send(`
 		<h1>
 			Working
